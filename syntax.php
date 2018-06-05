@@ -58,16 +58,25 @@ class syntax_plugin_addnewpage extends DokuWiki_Syntax_Plugin {
      * @codingStandardsIgnoreStart
      */
     public function handle($match, $state, $pos, Doku_Handler $handler) {
+
+        // check for preset
+        $preset = false;
+        if (strpos($match, ' preset') !== FALSE){
+            $preset = TRUE;
+            $match = str_replace(" preset", "", $match);
+        }
+
         /* @codingStandardsIgnoreEnd */
         $options = substr($match, 9, -2); // strip markup
-        $options = explode('#', $options, 2);
 
+        $options = explode('#', $options, 2);
         $namespace = trim(ltrim($options[0], '>'));
         $templates = explode(',', $options[1]);
         $templates = array_map('trim', $templates);
         return array(
             'namespace' => $namespace,
-            'newpagetemplates' => $templates
+            'newpagetemplates' => $templates,
+            'preset' => $preset
         );
     }
 
@@ -97,10 +106,17 @@ class syntax_plugin_addnewpage extends DokuWiki_Syntax_Plugin {
 
             $newpagetemplateinput = $this->_htmlTemplateInput($data['newpagetemplates']);
 
+            $value = "";
+            $type = "text";
+            if ($data['preset']) {
+                $value = ' value="Ignore me. I will be replaced by a timestamp"';
+                $type = "hidden";
+            }
+
             $form = '<div class="addnewpage">' . DOKU_LF
                 . DOKU_TAB . '<form name="addnewpage" method="get" action="' . DOKU_BASE . DOKU_SCRIPT . '" accept-charset="' . $lang['encoding'] . '">' . DOKU_LF
                 . DOKU_TAB . DOKU_TAB . $namespaceinput . DOKU_LF
-                . DOKU_TAB . DOKU_TAB . '<input class="edit" type="text" name="title" size="20" maxlength="255" tabindex="2" />' . DOKU_LF
+                . DOKU_TAB . DOKU_TAB . '<input class="edit" type="'.$type.'" name="title" size="20" maxlength="255" tabindex="2" '.$value.'/>' . DOKU_LF
                 . $newpagetemplateinput
                 . DOKU_TAB . DOKU_TAB . '<input type="hidden" name="do" value="edit" />' . DOKU_LF
                 . DOKU_TAB . DOKU_TAB . '<input type="hidden" name="id" />' . DOKU_LF
