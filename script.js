@@ -24,7 +24,7 @@ jQuery(document).ready(function() {
         if (title.attr('type') == 'hidden') {
             var dt = new Date();
             id = ns.val()+":"+dt.getFullYear()  +
-                ("0" + dt.getMonth()).slice(-2) +
+                ("0" + (dt.getMonth()+1)).slice(-2) +
                 ("0" + dt.getDay()).slice(-2) + '-' +
                 ("0" + dt.getHours()).slice(-2) +
                 ("0" + dt.getMinutes()).slice(-2) +
