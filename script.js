@@ -19,7 +19,18 @@ jQuery(document).ready(function() {
         // Build the new page ID and save in hidden form field
         var ns = jQuery(this).find("[name='np_cat']");
         var title = jQuery(this).find("input[name='title']");
-        var id = ns.val()+":"+title.val();
+        var id = ns.val() + ":" + title.val();
+
+        if (title.attr('type') == 'hidden') {
+            var dt = new Date();
+            id = ns.val()+":"+dt.getFullYear()  +
+                ("0" + dt.getMonth()).slice(-2) +
+                ("0" + dt.getDay()).slice(-2) + '-' +
+                ("0" + dt.getHours()).slice(-2) +
+                ("0" + dt.getMinutes()).slice(-2) +
+                ("0" + dt.getSeconds()).slice(-2);
+        }
+
         jQuery(this).find("input[name='id']").val(id);
 
         // Clean up the form vars, just to make the resultant URL a bit nicer
